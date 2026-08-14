@@ -11,7 +11,7 @@
 | Latencia de 5 ejecuciones (ms) | `time curl` | 5432 ms, 2337 ms, 2883 ms, 3937 ms, 3505 ms |
 | Latencia promedio | Promedio de las cinco | 3618,8 ms |
 | RAM usada durante la inferencia | `free -h` mientras responde | 1.0 GiB |
-| Calidad percibida (1 a 5) | Criterio personal | Pendiente |
+| Calidad percibida (1 a 5) | Criterio personal | 4 |
 
 ## Observaciones
 
