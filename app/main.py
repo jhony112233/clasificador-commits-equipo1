@@ -49,9 +49,11 @@ def registrar(motor, modelo, entrada, salida, latencia_ms):
 def clasificar_eco(texto: str) -> str:
     """Motor por reglas: linea base sin modelo, no consume memoria."""
     minusculas = texto.lower()
+
     for tipo, patron in REGLAS.items():
         if re.search(patron, minusculas):
             return tipo
+
     return "chore"
 
 
@@ -60,7 +62,8 @@ def clasificar_ollama(texto: str) -> str:
     prompt = (
         "Clasifica el siguiente mensaje de commit en UNA de estas categorias: "
         + ", ".join(TIPOS)
-        + ". Responde unicamente con la palabra de la categoria, sin explicaciones.\n"
+        + ". Responde unicamente con la palabra de la categoria, "
+        "sin explicaciones.\n"
         + f"Mensaje: {texto}\nCategoria:"
     )
 
@@ -80,6 +83,7 @@ def clasificar_ollama(texto: str) -> str:
     )
 
     respuesta.raise_for_status()
+
     texto_salida = respuesta.json()["response"].strip().lower()
 
     for tipo in TIPOS:
@@ -101,15 +105,12 @@ def health():
         with conexion() as con, con.cursor() as cur:
             cur.execute("SELECT 1")
 
-        return {
-            "estado": "ok",
-            "base_datos": "ok"
-        }
+        return {"estado": "ok", "base_datos": "ok"}
 
-    except Exception:
+    except psycopg2.Error:
         raise HTTPException(
             status_code=503,
-            detail="Base de datos no disponible"
+            detail="Base de datos no disponible",
         )
 
 
@@ -130,7 +131,7 @@ def clasificar(p: Peticion):
     else:
         raise HTTPException(
             status_code=400,
-            detail="motor debe ser eco u ollama"
+            detail="motor debe ser eco u ollama",
         )
 
     latencia_ms = (time.time() - inicio) * 1000
@@ -140,7 +141,7 @@ def clasificar(p: Peticion):
         modelo,
         p.texto,
         salida,
-        latencia_ms
+        latencia_ms,
     )
 
     return {
@@ -161,6 +162,7 @@ def inferencias(limite: int = 20):
             " FROM inferencias ORDER BY id DESC LIMIT %s",
             (limite,),
         )
+
         filas = cur.fetchall()
 
     columnas = [
@@ -170,7 +172,7 @@ def inferencias(limite: int = 20):
         "modelo",
         "entrada",
         "salida",
-        "latencia_ms"
+        "latencia_ms",
     ]
 
-    return [dict(zip(columnas, f)) for f in filas]
+    return [dict(zip(columnas, fila)) for fila in filas]
