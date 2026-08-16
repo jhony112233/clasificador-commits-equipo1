@@ -16,7 +16,10 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    networks: [red-ia]
+    ports:
+      - "5432:5432"
+    networks:
+      - red-ia
 
   api:
     build: .
@@ -32,7 +35,8 @@ services:
         condition: service_healthy
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    networks: [red-ia]
+    networks:
+      - red-ia
 
 volumes:
   pgdata:
