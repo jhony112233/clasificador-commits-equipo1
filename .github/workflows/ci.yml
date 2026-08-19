@@ -3,7 +3,7 @@ name: Pruebas automatizadas y de carga
 on:
   push:
     branches:
-      - principal
+      - main
   pull_request:
 
 jobs:
