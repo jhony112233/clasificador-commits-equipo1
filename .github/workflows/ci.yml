@@ -24,6 +24,7 @@ jobs:
           --health-retries 5
 
     env:
+      PYTHONPATH: .
       DB_HOST: localhost
       DB_PORT: 5432
       DB_NAME: iadb
@@ -50,3 +51,4 @@ jobs:
 
       - name: Ejecutar pruebas
         run: pytest -v
+
